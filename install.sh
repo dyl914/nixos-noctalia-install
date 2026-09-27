@@ -41,11 +41,11 @@ detect_gpu() {
 
 select_filesystem() {
   local prompt_target="$1"
-  echo -e "\n${BLUE}--> Select Filesystem for ${prompt_target} Partition:${NC}"
-  echo "1) ext4 (Standard / Robust - Default)"
-  echo "2) btrfs (Snapshots / Compression)"
-  echo "3) xfs (High Performance)"
-  echo "4) zfs (Advanced Data Integrity)"
+  echo -e "\n${BLUE}--> Select Filesystem for ${prompt_target} Partition:${NC}" >&2
+  echo "1) ext4 (Standard / Robust - Default)" >&2
+  echo "2) btrfs (Snapshots / Compression)" >&2
+  echo "3) xfs (High Performance)" >&2
+  echo "4) zfs (Advanced Data Integrity)" >&2
   read -rp "Choice [1-4]: " FS_CHOICE
 
   case $FS_CHOICE in
@@ -258,62 +258,68 @@ PKG_OPTIONS=(
 
 SELECTED_CHOICES=()
 
-if command -v whiptail >/dev/null 2>&1; then
-  CHECKLIST_ARGS=()
-  for ((i=0; i<${#PKG_OPTIONS[@]}; i+=2)); do
-    CHECKLIST_ARGS+=("${PKG_OPTIONS[i+1]}" "${PKG_OPTIONS[i]}" "OFF")
-  done
+for ((i=0; i<${#PKG_OPTIONS[@]}; i+=2)); do
+  label="${PKG_OPTIONS[i]}"
+  attr="${PKG_OPTIONS[i+1]}"
+  read -rp "Install $label? [y/N]: " choice
+  case "$choice" in 
+    [yY][eE][sS]|[yY]) SELECTED_CHOICES+=("$attr") ;;
+  esac
+done
 
-  RAW_CHOICES=$(whiptail --title "General Package Selection" \
-    --checklist "Press [SPACE] to toggle extra applications to install into Home Manager:" 22 78 12 \
-    "${CHECKLIST_ARGS[@]}" 3>&1 1>&2 2>&3 || true)
+echo -e "\n${BLUE}--> Select Default File Manager${NC}"
+echo "1) Yazi (Terminal TUI Default)"
+echo "2) Thunar (GTK / XFCE)"
+echo "3) Dolphin (KDE)"
+echo "4) Nemo (GTK)"
+echo "5) PCManFM"
+read -rp "Choice [1-5]: " FM_SEL
+case $FM_SEL in
+  1) FM_CHOICE="yazi" ;;
+  2) FM_CHOICE="thunar" ;;
+  3) FM_CHOICE="dolphin" ;;
+  4) FM_CHOICE="nemo" ;;
+  5) FM_CHOICE="pcmanfm" ;;
+  *) FM_CHOICE="yazi" ;;
+esac
 
-  eval "SELECTED_CHOICES=($RAW_CHOICES)"
-else
-  echo -e "${YELLOW}whiptail not found; falling back to interactive CLI prompts...${NC}"
-  for ((i=0; i<${#PKG_OPTIONS[@]}; i+=2)); do
-    label="${PKG_OPTIONS[i]}"
-    attr="${PKG_OPTIONS[i+1]}"
-    read -rp "Install $label? [y/N]: " choice
-    case "$choice" in 
-      [yY][eE][sS]|[yY]) SELECTED_CHOICES+=("$attr") ;;
-    esac
-  done
-fi
+echo -e "\n${BLUE}--> Select Default Web Browser${NC}"
+echo "1) Firefox"
+echo "2) Brave"
+echo "3) Chromium"
+echo "4) Tor Browser"
+read -rp "Choice [1-4]: " BROWSER_SEL
+case $BROWSER_SEL in
+  1) BROWSER_CHOICE="firefox" ;;
+  2) BROWSER_CHOICE="brave" ;;
+  3) BROWSER_CHOICE="chromium" ;;
+  4) BROWSER_CHOICE="tor-browser" ;;
+  *) BROWSER_CHOICE="firefox" ;;
+esac
 
-if command -v whiptail >/dev/null 2>&1; then
-  FM_CHOICE=$(whiptail --title "Default File Manager" --radiolist \
-    "Select primary file manager:" 15 78 5 \
-    "yazi" "Yazi (Terminal TUI Default)" ON \
-    "thunar" "Thunar (GTK / XFCE)" OFF \
-    "dolphin" "Dolphin (KDE)" OFF \
-    "nemo" "Nemo (GTK)" OFF \
-    "pcmanfm" "PCManFM" OFF 3>&1 1>&2 2>&3 || echo "yazi")
-  
-  BROWSER_CHOICE=$(whiptail --title "Default Web Browser" --radiolist \
-    "Select primary web browser:" 15 78 4 \
-    "firefox" "Firefox" ON \
-    "brave" "Brave" OFF \
-    "chromium" "Chromium" OFF \
-    "tor-browser" "Tor Browser" OFF 3>&1 1>&2 2>&3 || echo "firefox")
+echo -e "\n${BLUE}--> Select Default Terminal Emulator${NC}"
+echo "1) foot / footclient"
+echo "2) Kitty"
+echo "3) Alacritty"
+read -rp "Choice [1-3]: " TERM_SEL
+case $TERM_SEL in
+  1) TERM_CHOICE="foot" ;;
+  2) TERM_CHOICE="kitty" ;;
+  3) TERM_CHOICE="alacritty" ;;
+  *) TERM_CHOICE="foot" ;;
+esac
 
-  TERM_CHOICE=$(whiptail --title "Default Terminal Emulator" --radiolist \
-    "Select primary terminal emulator:" 15 78 3 \
-    "foot" "foot / footclient" ON \
-    "kitty" "Kitty" OFF \
-    "alacritty" "Alacritty" OFF 3>&1 1>&2 2>&3 || echo "foot")
-
-  EDITOR_CHOICE=$(whiptail --title "Default Text Editor" --radiolist \
-    "Select primary text editor:" 15 78 3 \
-    "neovim" "Neovim" ON \
-    "vscode" "VS Code" OFF \
-    "vscodium" "VSCodium" OFF 3>&1 1>&2 2>&3 || echo "neovim")
-else
-  FM_CHOICE="yazi"
-  BROWSER_CHOICE="firefox"
-  TERM_CHOICE="foot"
-  EDITOR_CHOICE="neovim"
-fi
+echo -e "\n${BLUE}--> Select Default Text Editor${NC}"
+echo "1) Neovim"
+echo "2) VS Code"
+echo "3) VSCodium"
+read -rp "Choice [1-3]: " EDITOR_SEL
+case $EDITOR_SEL in
+  1) EDITOR_CHOICE="neovim" ;;
+  2) EDITOR_CHOICE="vscode" ;;
+  3) EDITOR_CHOICE="vscodium" ;;
+  *) EDITOR_CHOICE="neovim" ;;
+esac
 
 if [ "$EDITOR_CHOICE" = "neovim" ]; then
   EDITOR_EXEC="nvim"
@@ -327,7 +333,11 @@ else
   FM_EXEC="$FM_CHOICE"
 fi
 
-ALL_PKGS=("$FM_CHOICE" "$BROWSER_CHOICE" "$TERM_CHOICE" "$EDITOR_CHOICE" "${SELECTED_CHOICES[@]}")
+ALL_PKGS=("$FM_CHOICE" "$BROWSER_CHOICE" "$TERM_CHOICE" "$EDITOR_CHOICE")
+if [ ${#SELECTED_CHOICES[@]} -gt 0 ]; then
+  ALL_PKGS+=("${SELECTED_CHOICES[@]}")
+fi
+
 mapfile -t UNIQUE_PKGS < <(printf "%s\n" "${ALL_PKGS[@]}" | sort -u)
 
 # --- 3. Pre-Flight Review & Confirmation ---

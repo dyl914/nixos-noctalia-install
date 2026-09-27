@@ -262,9 +262,11 @@ for ((i=0; i<${#PKG_OPTIONS[@]}; i+=2)); do
   label="${PKG_OPTIONS[i]}"
   attr="${PKG_OPTIONS[i+1]}"
   read -rp "Install $label? [y/N]: " choice
-  case "$choice" in 
-    [yY][eE][sS]|[yY]) SELECTED_CHOICES+=("$attr") ;;
-  esac
+  choice_clean=$(echo "$choice" | tr '[:upper:]' '[:lower:]' | xargs)
+  if [[ "$choice_clean" == "y" || "$choice_clean" == "yes" ]]; then
+    SELECTED_CHOICES+=("$attr")
+    echo -e "  ${GREEN}+ Added: ${attr}${NC}"
+  fi
 done
 
 echo -e "\n${BLUE}--> Select Default File Manager${NC}"
@@ -334,7 +336,8 @@ else
 fi
 
 ALL_PKGS=("$FM_CHOICE" "$BROWSER_CHOICE" "$TERM_CHOICE" "$EDITOR_CHOICE")
-if [ ${#SELECTED_CHOICES[@]} -gt 0 ]; then
+
+if [ "${#SELECTED_CHOICES[@]}" -gt 0 ]; then
   ALL_PKGS+=("${SELECTED_CHOICES[@]}")
 fi
 

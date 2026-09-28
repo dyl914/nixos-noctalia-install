@@ -55,14 +55,14 @@
         type = "lvm_vg";
         lvs = 
           # Conditional Swap Volume
-          (lib.optionalAttrs (swapSizeG > 0) {
+          lib.optionalAttrs (swapSizeG > 0) {
             swap = {
               size = "${toString swapSizeG}G";
               content = {
                 type = "swap";
               };
             };
-          })
+          }
           # Root Logical Volume with selected filesystem
           // {
             root = {
@@ -75,7 +75,7 @@
             };
           }
           # Conditional Home Logical Volume with selected filesystem
-          // (lib.optionalAttrs splitHome {
+          // lib.optionalAttrs splitHome {
             home = {
               size = "100%FREE";
               content = {
@@ -83,8 +83,8 @@
                 format = homeFS;
                 mountpoint = "/home";
               };
-            });
-      };
+            };
+          };
     };
   };
 }

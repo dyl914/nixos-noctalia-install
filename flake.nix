@@ -16,7 +16,7 @@
   outputs = { self, nixpkgs, home-manager, disko, ... }@inputs: {
     nixosConfigurations = {
       # Target host configuration
-      default = nixpkgs.lib.nixosSystem {
+      "@HOSTNAME@" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [

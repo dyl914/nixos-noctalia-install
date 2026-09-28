@@ -393,6 +393,12 @@ nix --extra-experimental-features 'nix-command flakes' run github:nix-community/
   --arg splitHome "${SPLIT_HOME}"
 
 # --- 5. Provision Target Workspace & Symlink Configuration ---
+echo -e "\n${BLUE}--> Generating hardware configuration for target host...${NC}"
+
+# Generate the hardware profile directly from mounted target filesystems
+nixos-generate-config --root /mnt --dir "${SCRIPT_DIR}"
+
+#
 TARGET_DIR="/mnt"
 USER_HOME="${TARGET_DIR}/home/${USER_VAR}"
 DOTFILES_DIR="${USER_HOME}/dotfiles"

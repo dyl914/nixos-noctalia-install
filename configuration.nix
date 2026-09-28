@@ -24,7 +24,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Enable resume device if swap exists
-  boot.resumeDevice = libmkDefault "/dev/pool/swap";
+  boot.resumeDevice = lib.mkDefault "/dev/pool/swap";
 
   # Networking & Bluetooth
   networking.networkmanager.enable = true;

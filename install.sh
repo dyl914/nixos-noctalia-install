@@ -373,11 +373,19 @@ if [[ ! "$CONFIRM_PROCEED" =~ ^[Yy]$ ]]; then
 fi
 
 # --- 4. Partitioning & Formatting via Disko ---
-echo -e "\n${BLUE}--> Partitioning and formatting target disk with Disko...${NC}"
+echo -e "\n${BLUE}--> Writing keyfile and running Disko...${NC}"
+
+KEYFILE="/tmp/disko-luks.key"
+echo -n "${LUKS_PASS_VAR}" > "$KEYFILE"
+chmod 600 "$KEYFILE"
+
+# Clean up keyfile on exit or interrupt
+trap 'rm -f "$KEYFILE"' EXIT
+
 nix --extra-experimental-features 'nix-command flakes' run github:nix-community/disko -- \
   --mode disko "${SCRIPT_DIR}/disko.nix" \
   --argstr disk "${DISK_VAR}" \
-  --argstr luksPassword "${LUKS_PASS_VAR}" \
+  --argstr keyFile "${KEYFILE}" \
   --argstr rootFS "${ROOT_FS}" \
   --argstr homeFS "${HOME_FS}" \
   --arg swapSizeG "${SWAP_SIZE_G}" \

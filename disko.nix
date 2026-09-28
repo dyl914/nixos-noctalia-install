@@ -1,7 +1,7 @@
 {
-  lib ? import <nixpkgs/lib>,
+  lib ? import <nixpkgs/lib> {},
   disk ? "/dev/sda",
-  luksPassword ? "",
+  keyFile ? "/tmp/disko-luks.key",
   swapSizeG ? 8,
   rootSizeG ? 80,
   splitHome ? true,
@@ -35,7 +35,7 @@
               content = {
                 type = "luks";
                 name = "crypted";
-                password = luksPassword;
+                passwordFile = keyFile; # Uses temporary keyfile path passed from install.sh
                 settings = {
                   allowDiscards = true;
                 };
@@ -53,16 +53,16 @@
     lvm_vg = {
       pool = {
         type = "lvm_vg";
-        lvs = (
+        lvs = 
           # Conditional Swap Volume
-          lib.optionalAttrs (swapSizeG > 0) {
+          (lib.optionalAttrs (swapSizeG > 0) {
             swap = {
               size = "${toString swapSizeG}G";
               content = {
                 type = "swap";
               };
             };
-          }
+          })
           # Root Logical Volume with selected filesystem
           // {
             root = {
@@ -75,7 +75,7 @@
             };
           }
           # Conditional Home Logical Volume with selected filesystem
-          // lib.optionalAttrs splitHome {
+          // (lib.optionalAttrs splitHome {
             home = {
               size = "100%FREE";
               content = {
@@ -83,9 +83,7 @@
                 format = homeFS;
                 mountpoint = "/home";
               };
-            };
-          }
-        );
+            });
       };
     };
   };

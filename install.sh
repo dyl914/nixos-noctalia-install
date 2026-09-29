@@ -439,7 +439,7 @@ FOOT_SERVICE_NIX=""
 if [ "$TERM_CHOICE" = "foot" ]; then
   FOOT_SERVICE_NIX="
   programs.foot.enable = true;
-  services.foot.server.enable = true;"
+  programs.foot.server.enable = true;"
 fi
 
 cat <<EOF > "${HOME_MODULE_DIR}/defaultApps.nix"

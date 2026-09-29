@@ -413,7 +413,7 @@ cp -r "${SCRIPT_DIR}/"* "${DOTFILES_DIR}/"
 echo -e "${BLUE}--> Constructing /etc/nixos symlink to user dotfiles...${NC}"
 mkdir -p "${TARGET_DIR}/etc"
 rm -rf "${TARGET_DIR}/etc/nixos"
-ln -s "/home/${USER_VAR}/dotfiles" "${TARGET_DIR}/etc/nixos"
+ln -s "../home/${USER_VAR}/dotfiles" "${TARGET_DIR}/etc/nixos"
 
 # --- 6. Write Generated Home Manager Modules ---
 HOME_MODULE_DIR="${DOTFILES_DIR}/modules/home"

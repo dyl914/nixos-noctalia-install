@@ -2,9 +2,9 @@
   lib ? import <nixpkgs/lib> {},
   disk ? "/dev/sda",
   keyFile ? "/tmp/disko-luks.key",
-  swapSizeG ? 8,
+  swapSizeG ? 4,
   rootSizeG ? 80,
-  splitHome ? true,
+  splitHome ? false,
   rootFS ? "ext4",
   homeFS ? "ext4",
   ...

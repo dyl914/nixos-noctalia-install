@@ -54,7 +54,7 @@ select_filesystem() {
   echo "2) btrfs (Snapshots / Compression)" >&2
   echo "3) xfs (High Performance)" >&2
   echo "4) zfs (Advanced Data Integrity)" >&2
-  read -rp "Choice [1-4]: " FS_CHOICE
+  read -rp "Choice [1-4]: " FS_CHOICE < /dev/tty
 
   case $FS_CHOICE in
     1) echo "ext4" ;;
@@ -69,7 +69,7 @@ select_timezone() {
   echo -e "\n${BLUE}--> Timezone Selection${NC}"
   echo "1) Pick from Region list (recommended)"
   echo "2) Enter raw timezone string manually"
-  read -rp "Choice [1-2]: " TZ_CHOICE
+  read -rp "Choice [1-2]: " TZ_CHOICE < /dev/tty
 
   if [ "$TZ_CHOICE" -eq 1 ]; then
     echo -e "\nSelect Region:"
@@ -85,7 +85,7 @@ select_timezone() {
         mapfile -t tz_list < <(timedatectl list-timezones | grep "^${reg}/" || true)
         
         if [ ${#tz_list[@]} -eq 0 ]; then
-          read -rp "Enter Timezone (e.g. America/Edmonton): " TIMEZONE_VAR
+          read -rp "Enter Timezone (e.g. America/Edmonton): " TIMEZONE_VAR < /dev/tty
           break
         fi
 
@@ -99,14 +99,14 @@ select_timezone() {
       fi
     done
   else
-    read -rp "Enter Timezone (e.g. America/Edmonton): " TIMEZONE_VAR
+    read -rp "Enter Timezone (e.g. America/Edmonton): " TIMEZONE_VAR < /dev/tty
   fi
 }
 
 # --- 1. User & System Parameters Gathering ---
 echo -e "${BLUE}--> Select Target Disk:${NC}"
 lsblk -d -n -o NAME,SIZE,TYPE,MODEL | grep -E "disk"
-read -rp "Enter Target Disk (e.g. /dev/sda or /dev/nvme0n1): " DISK_VAR
+read -rp "Enter Target Disk (e.g. /dev/sda or /dev/nvme0n1): " DISK_VAR < /dev/tty
 
 if [ ! -b "$DISK_VAR" ]; then
   echo -e "${RED}Error: Device ${DISK_VAR} is not a valid block device.${NC}"
@@ -116,15 +116,15 @@ fi
 DISK_BYTES=$(lsblk -b -d -n -o SIZE "$DISK_VAR")
 DISK_SIZE_GB=$(( DISK_BYTES / 1024 / 1024 / 1024 ))
 
-read -rp "Enter Hostname: " HOST_VAR
-read -rp "Enter Username: " USER_VAR
+read -rp "Enter Hostname: " HOST_VAR < /dev/tty
+read -rp "Enter Username: " USER_VAR < /dev/tty
 
 select_timezone
 
 echo ""
-read -rsp "Enter Password for ${USER_VAR} & Root: " PASS_VAR
+read -rsp "Enter Password for ${USER_VAR} & Root: " PASS_VAR < /dev/tty
 echo ""
-read -rsp "Confirm Password: " PASS_CONFIRM_VAR
+read -rsp "Confirm Password: " PASS_CONFIRM_VAR < /dev/tty
 echo ""
 
 if [ "$PASS_VAR" != "$PASS_CONFIRM_VAR" ]; then
@@ -135,9 +135,9 @@ HASHED_PASS=$(mkpasswd -m sha-512 "$PASS_VAR")
 
 # --- LUKS Encryption Password Prompt ---
 echo ""
-read -rsp "Enter LUKS Disk Encryption Password: " LUKS_PASS_VAR
+read -rsp "Enter LUKS Disk Encryption Password: " LUKS_PASS_VAR < /dev/tty
 echo ""
-read -rsp "Confirm LUKS Disk Encryption Password: " LUKS_PASS_CONFIRM_VAR
+read -rsp "Confirm LUKS Disk Encryption Password: " LUKS_PASS_CONFIRM_VAR < /dev/tty
 echo ""
 
 if [ "$LUKS_PASS_VAR" != "$LUKS_PASS_CONFIRM_VAR" ]; then
@@ -148,7 +148,7 @@ fi
 echo -e "\n${BLUE}--> Select Default Wayland Compositor${NC}"
 echo "1) Umbriel"
 echo "2) Hyprland"
-read -rp "Choice [1-2]: " COMPOSITOR_CHOICE
+read -rp "Choice [1-2]: " COMPOSITOR_CHOICE < /dev/tty
 
 if [ "$COMPOSITOR_CHOICE" -eq 2 ]; then
   UMBRIEL_SYS="false"
@@ -168,7 +168,7 @@ echo "2) AMD"
 echo "3) Intel"
 echo "4) Nvidia"
 echo "5) Integrated / None"
-read -rp "Choice [1-5]: " GPU_SELECT
+read -rp "Choice [1-5]: " GPU_SELECT < /dev/tty
 
 case $GPU_SELECT in
   1) GPU_TYPE="$DETECTED_GPU" ;;
@@ -187,7 +187,7 @@ echo "Detected System RAM: ${TOTAL_RAM_GB} GB"
 echo "1) Hibernation Swap (Equal to RAM size: ${TOTAL_RAM_GB}G)"
 echo "2) Minimal Swap (4 GB)"
 echo "3) No Swap (0 GB)"
-read -rp "Choice [1-3]: " SWAP_CHOICE
+read -rp "Choice [1-3]: " SWAP_CHOICE < /dev/tty
 
 case $SWAP_CHOICE in
   1) SWAP_SIZE_G=$TOTAL_RAM_GB ;;
@@ -204,7 +204,7 @@ if [ "$REMAINING_GB" -ge 120 ]; then
   echo -e "\nUsable disk space (${REMAINING_GB} GB) allows a separate /home volume."
   echo "1) Single Root Partition (100% FREE to /)"
   echo "2) Separate /home Volume (80GB for /, remainder for /home)"
-  read -rp "Choice [1-2]: " SPLIT_CHOICE
+  read -rp "Choice [1-2]: " SPLIT_CHOICE < /dev/tty
   if [ "$SPLIT_CHOICE" -eq 2 ]; then
     SPLIT_HOME=true
     ROOT_SIZE_G=80
@@ -262,7 +262,7 @@ SELECTED_CHOICES=()
 for ((i=0; i<${#PKG_OPTIONS[@]}; i+=2)); do
   label="${PKG_OPTIONS[i]}"
   attr="${PKG_OPTIONS[i+1]}"
-  read -rp "Install $label? [y/N]: " choice
+  read -rp "Install $label? [y/N]: " choice < /dev/tty
   choice_clean=$(echo "$choice" | tr '[:upper:]' '[:lower:]' | xargs)
   if [[ "$choice_clean" == "y" || "$choice_clean" == "yes" ]]; then
     SELECTED_CHOICES+=("$attr")
@@ -276,7 +276,7 @@ echo "2) Thunar (GTK / XFCE)"
 echo "3) Dolphin (KDE)"
 echo "4) Nemo (GTK)"
 echo "5) PCManFM"
-read -rp "Choice [1-5]: " FM_SEL
+read -rp "Choice [1-5]: " FM_SEL < /dev/tty
 case $FM_SEL in
   1) FM_CHOICE="yazi" ;;
   2) FM_CHOICE="thunar" ;;
@@ -291,7 +291,7 @@ echo "1) Firefox"
 echo "2) Brave"
 echo "3) Chromium"
 echo "4) Tor Browser"
-read -rp "Choice [1-4]: " BROWSER_SEL
+read -rp "Choice [1-4]: " BROWSER_SEL < /dev/tty
 case $BROWSER_SEL in
   1) BROWSER_CHOICE="firefox" ;;
   2) BROWSER_CHOICE="brave" ;;
@@ -304,7 +304,7 @@ echo -e "\n${BLUE}--> Select Default Terminal Emulator${NC}"
 echo "1) foot / footclient"
 echo "2) Kitty"
 echo "3) Alacritty"
-read -rp "Choice [1-3]: " TERM_SEL
+read -rp "Choice [1-3]: " TERM_SEL < /dev/tty
 case $TERM_SEL in
   1) TERM_CHOICE="foot" ;;
   2) TERM_CHOICE="kitty" ;;
@@ -316,7 +316,7 @@ echo -e "\n${BLUE}--> Select Default Text Editor${NC}"
 echo "1) Neovim"
 echo "2) VS Code"
 echo "3) VSCodium"
-read -rp "Choice [1-3]: " EDITOR_SEL
+read -rp "Choice [1-3]: " EDITOR_SEL < /dev/tty
 case $EDITOR_SEL in
   1) EDITOR_CHOICE="neovim" ;;
   2) EDITOR_CHOICE="vscode" ;;
@@ -366,7 +366,7 @@ printf "%-22s : %s\n" "Default File Manager:" "${FM_CHOICE}"
 printf "%-22s : %s packages selected\n" "Extra Packages:" "${#SELECTED_CHOICES[@]}"
 echo -e "${YELLOW}====================================================${NC}"
 echo -e "${RED}WARNING: ALL DATA ON ${DISK_VAR} WILL BE ERASED!${NC}"
-read -rp "Proceed with disk formatting & installation? [y/N]: " CONFIRM_PROCEED
+read -rp "Proceed with disk formatting & installation? [y/N]: " CONFIRM_PROCEED < /dev/tty
 
 if [[ ! "$CONFIRM_PROCEED" =~ ^[Yy]$ ]]; then
   echo -e "${BLUE}Installation aborted by user.${NC}"

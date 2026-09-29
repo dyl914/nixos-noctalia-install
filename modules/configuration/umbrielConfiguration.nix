@@ -9,5 +9,9 @@ in
       enable = true;
       enable32Bit = true;
     };
+
+#  environment.systemPackages = with pkgs; [
+#    ... umbriel specific system packages ...
+#  ];
   };
 }

@@ -5,10 +5,6 @@ let
   tomlFormat = pkgs.formats.toml {};
 in
 {
-  options.programs.umbriel = {
-    enable = lib.mkEnableOption "Umbriel home configuration";
-  };
-
   config = lib.mkIf cfg.enable {
     xdg.configFile."umbriel/config.toml".source = tomlFormat.generate "umbriel-config.toml" {
       general = {

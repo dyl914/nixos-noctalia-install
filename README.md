@@ -7,4 +7,4 @@ Automated, modular NixOS installer with LUKS encryption, Disko partitioning, and
 Boot into a standard NixOS Live UEFI ISO, open a terminal, and run:
 
 ```bash
-curl -sSL [https://raw.githubusercontent.com/dyl914/nixos-noctalia-install/main/install.sh](https://raw.githubusercontent.com/dyl914/nixos-noctalia-install/main/install.sh) | sudo bash
+curl -sSL https://raw.githubusercontent.com/dyl914/nixos-noctalia-install/main/install.sh | sudo bash

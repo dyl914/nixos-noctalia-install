@@ -438,7 +438,7 @@ EOF
 FOOT_SERVICE_NIX=""
 if [ "$TERM_CHOICE" = "foot" ]; then
   FOOT_SERVICE_NIX="
-  services.foot.enable = true;
+  programs.foot.enable = true;
   services.foot.server.enable = true;"
 fi
 

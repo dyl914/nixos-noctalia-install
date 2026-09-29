@@ -66,9 +66,9 @@ in
         capsule_radius = 7;
 
         # Noctalia bar element layout
-        start = ["launcher", "wallpaper", "workspaces"];
+        start = ["launcher" "wallpaper" "workspaces"];
         center = ["clock"];
-        end = ["tray", "notifications", "clipboard", "network", "bluetooth", "volume", "audio_visualizer", "brightness", "nightlight", "battery", "control-center", "session"];
+        end = ["tray" "notifications" "clipboard" "network" "bluetooth" "volume" "audio_visualizer" "brightness" "nightlight" "battery" "control-center" "session"];
       };
     };
 

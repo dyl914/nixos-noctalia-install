@@ -4,10 +4,6 @@ let
   cfg = config.programs.hyprland;
 in
 {
-  options.programs.hyprland = {
-    enable = lib.mkEnableOption "Hyprland compositor system components";
-  };
-
   config = lib.mkIf cfg.enable {
     boot.kernelParams = [ "i915.modeset=1" ];
 
@@ -26,7 +22,6 @@ in
     };
 
     programs.hyprland = {
-      enable = true;
       xwayland.enable = true;
     };
   };

@@ -8,7 +8,15 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-SCRIPT_DIR="${WORK_DIR:~/tmp/nixos-config}"
+# Set workspace fallback directory
+WORK_DIR="/tmp/nixos-config"
+
+# Safely check if BASH_SOURCE[0] exists (curl piping leaves it unset)
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+  SCRIPT_DIR="$WORK_DIR"
+fi
 
 echo -e "${BLUE}=== NixOS Modular Automated Installer ===${NC}\n"
 

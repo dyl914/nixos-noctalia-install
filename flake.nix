@@ -1,14 +1,10 @@
 {
-  description = "System Flake for NixOS With Umbriel/Hyprland";
+  description = "System Flake for NixOS With Noctalia and Umbriel/Hyprland";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko = {
-      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -20,10 +16,6 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          # Import Disko module (uses disk configuration generated or imported)
-          disko.nixosModules.disko
-          ./disko.nix
-
           # Main System Configuration
           ./configuration.nix
 

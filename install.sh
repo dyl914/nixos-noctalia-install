@@ -421,7 +421,8 @@ mkdir -p "$HOME_MODULE_DIR"
 
 FORMATTED_PKGS=""
 for pkg in "${UNIQUE_PKGS[@]}"; do
-  FORMATTED_PKGS="${FORMATTED_PKGS}\n    ${pkg}"
+  FORMATTED_PKGS="${FORMATTED_PKGS}
+    ${pkg}"
 done
 
 cat <<EOF > "${HOME_MODULE_DIR}/userPackages.nix"

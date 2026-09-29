@@ -218,10 +218,7 @@ PKG_OPTIONS=(
   "Audacity (Audio Editor)"             "audacity"
   "Bitwarden (Password Manager)"        "bitwarden-desktop"
   "Blender (3D Modeling)"               "blender"
-  "Brave (Browser)"                     "brave"
   "Calibre (E-Book Manager)"            "calibre"
-  "Chromium (Browser)"                  "chromium"
-  "Dolphin (KDE File Manager)"          "dolphin"
   "Element (Matrix Client)"             "element-desktop"
   "FileZilla (FTP Client)"              "filezilla"
   "GIMP (Image Editor)"                 "gimp"
@@ -229,14 +226,11 @@ PKG_OPTIONS=(
   "Inkscape (Vector Graphics)"          "inkscape"
   "Kdenlive (Video Editor)"             "kdenlive"
   "KeePassXC (Password Manager)"        "keepassxc"
-  "Kitty (Terminal Emulator)"           "kitty"
   "LibreOffice (Office Suite)"          "libreoffice"
   "Lutris (Gaming Platform)"            "lutris"
   "MPV (Media Player)"                  "mpv"
-  "Nemo (GTK File Manager)"             "nemo"
   "OBS Studio (Screen Recording)"       "obs-studio"
   "Obsidian (Notes & Knowledge)"        "obsidian"
-  "PCManFM (Lightweight File Manager)"  "pcmanfm"
   "P7Zip (Archive Utility)"             "p7zip"
   "Ripgrep (CLI Search Utility)"        "ripgrep"
   "Signal Desktop (Messaging)"          "signal-desktop"
@@ -244,7 +238,6 @@ PKG_OPTIONS=(
   "Steam (Gaming Platform)"             "steam"
   "Syncthing (File Sync)"               "syncthing"
   "Thunderbird (Email Client)"          "thunderbird"
-  "Thunar (GTK File Manager)"           "thunar"
   "Tmux (Terminal Multiplexer)"         "tmux"
   "Tor Browser (Privacy Browser)"       "tor-browser"
   "Transmission (BitTorrent Client)"    "transmission_4-qt"
@@ -373,6 +366,14 @@ if [[ ! "$CONFIRM_PROCEED" =~ ^[Yy]$ ]]; then
 fi
 
 # --- 4. Partitioning & Formatting via Disko ---
+REPO_URL="https://github.com/dyl914/nixos-noctalia-install.git"
+WORK_DIR="/tmp/nixos-config"
+
+echo -e "\n${BLUE}--> Fetching configuration repository...${NC}"
+rm -rf "$WORK_DIR"
+git clone --depth 1 "$REPO_URL" "$WORK_DIR"
+SCRIPT_DIR="$WORK_DIR"
+
 echo -e "\n${BLUE}--> Writing keyfile and running Disko...${NC}"
 
 KEYFILE="/tmp/disko-luks.key"
@@ -393,12 +394,6 @@ nix --extra-experimental-features 'nix-command flakes' run github:nix-community/
   --arg splitHome "${SPLIT_HOME}"
 
 # --- 5. Provision Target Workspace & Symlink Configuration ---
-echo -e "\n${BLUE}--> Generating hardware configuration for target host...${NC}"
-
-# Generate the hardware profile directly from mounted target filesystems
-nixos-generate-config --root /mnt --dir "${SCRIPT_DIR}"
-
-#
 TARGET_DIR="/mnt"
 USER_HOME="${TARGET_DIR}/home/${USER_VAR}"
 DOTFILES_DIR="${USER_HOME}/dotfiles"

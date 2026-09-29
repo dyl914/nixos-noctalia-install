@@ -33,88 +33,91 @@ in
   # Noctalia Shell Configuration generated via tomlFormat
   xdg.configFile."noctalia/config.toml".source = tomlFormat.generate "noctalia-config.toml" {
     shell = {
-      font_family = "Inter Display"
-      umbriel_overview_type_to_launch_enabled = true
+      font_family = "Inter Display";
+      umbriel_overview_type_to_launch_enabled = true;
       animation = {
-        enabled = true
-        speed   = 2.0
-      }
-    }
+        enabled = true;
+        speed   = 2.0;
+      };
+    };
 
     bar = {
-      order = ["main"]
+      order = ["main"];
       default = {
-        enabled = true
-        position = "top"
-        auto_hide = false
+        enabled = true;
+        position = "top";
+        auto_hide = false;
 
-        thickness = 34
-        margin_ends = 4
-        margin_edge = 4
-        padding = 6
-        background_opacity = 0.8
-        shadow = false
-        radius = 5
-        widget_spacing = 5
-        hover_highlight = true
-        scale = 1.33
-        font_scale = 0.75
-        font_weight = 500
-        font_family = "Inter Display"
+        thickness = 34;
+        margin_ends = 4;
+        margin_edge = 4;
+        padding = 6;
+        background_opacity = 0.8;
+        shadow = false;
+        radius = 5;
+        widget_spacing = 5;
+        hover_highlight = true;
+        scale = 1.33;
+        font_scale = 0.75;
+        font_weight = 500;
+        font_family = "Inter Display";
 
-        capsule = true
-        capsule_radius = 7
+        capsule = true;
+        capsule_radius = 7;
 
         # Noctalia bar element layout
-        start = ["launcher", "wallpaper", "workspaces"]
-        center = ["clock"]
-        end = ["tray", "notifications", "clipboard", "network", "bluetooth", "volume", "audio_visualizer", "brightness", "nightlight", "battery", "control-center", "session"]
-      }
-    }
+        start = ["launcher", "wallpaper", "workspaces"];
+        center = ["clock"];
+        end = ["tray", "notifications", "clipboard", "network", "bluetooth", "volume", "audio_visualizer", "brightness", "nightlight", "battery", "control-center", "session"];
+      };
+    };
 
     # Noctalia widget settings
     widget = {
-      launcher.glyph = "rocket"
+      launcher.glyph = "rocket";
 
       workspaces = {
-        style = "focus_hint"
-        show_labels = true
-        pill_scale = 0.9
-      }
+        style = "focus_hint";
+        show_labels = true;
+        pill_scale = 0.9;
+      };
 
-      clock.format = "{:%a %m/%d %H:%M}"
+      clock.format = "{:%a %m/%d %H:%M}";
 
       audio-vis = {
-        type = "audio_visualizer"
-        width = 42
-        bands = 19
-        centered = true
-        show_when_idle = true
-        color_1 = "primary"
-        color_2 = "secondary"
-      }
+        type = "audio_visualizer";
+        width = 42;
+        bands = 19;
+        centered = true;
+        show_when_idle = true;
+        color_1 = "primary";
+        color_2 = "secondary";
+      };
 
-      control-center.glyph = "universe"
-    }
+      control-center.glyph = "universe";
+    };
 
-    [theme]
-    mode = "dark"
-    shell_mode = "follow"
-    source = "wallpaper"
+    theme = {
+      mode = "dark";
+      shell_mode = "follow";
+      source = "wallpaper";
+      templates.user.nvim-base16 = {
+        input_path = "~/.config/nvim/lua/matugen-template.lua";
+        output_path = "~/.config/nvim/lua/matugen.lua";
+        post_hook = "pkill -SIGUSR1 nvim";
+      };
+    };
 
-    [theme.templates.user.nvim-base16]
-    input_path = "~/.config/nvim/lua/matugen-template.lua"
-    output_path = "~/.config/nvim/lua/matugen.lua"
-    post_hook = "pkill -SIGUSR1 nvim"
+    battery = {
+      warning_threshold = 20;
+    };
 
-    [battery]
-    warning_threshold = 20
-
-    [calendar]
-    enabled = true
-    refresh_minutes = 15
-    event_date_format = "%A %e %B"
-    event_time_format = "%H:%Mh"
+    calendar = {
+      enabled = true;
+      refresh_minutes = 15;
+      event_date_format = "%A %e %B";
+      event_time_format = "%H:%Mh";
+    };
   };
 
   # Git Configuration
